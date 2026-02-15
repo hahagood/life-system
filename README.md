@@ -131,4 +131,53 @@ Everything is a starting point. Delete what doesn't resonate, add what does:
 
 ## Optional: QMD for Search
 
-If you accumulate lots of journal entries and decision docs, install [QMD](https://github.com/jclosure/qmd) to get keyword and semantic search across all your markdown files. Add the QMD MCP server to Claude Code and it can search your entire life system.
+Once you accumulate journal entries, decision docs, and notes, you'll want to search across them without manually reading dozens of files. [QMD](https://github.com/tobi/qmd) is a local CLI search engine for markdown files that supports keyword search (BM25), semantic/vector search, and hybrid queries with reranking.
+
+### Install QMD
+
+```bash
+# Install via Homebrew
+brew install tobi/tap/qmd
+
+# Index your life directory
+cd ~/Documents/yourname
+qmd update    # Build keyword index
+qmd embed     # Generate vector embeddings for semantic search
+```
+
+### Add QMD as an MCP server
+
+Add QMD to your Claude Code MCP config so Claude can search your notes directly. Add this to `~/.claude/settings.json` under `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "qmd": {
+      "command": "qmd",
+      "args": ["mcp"],
+      "cwd": "/Users/yourname/Documents/yourname"
+    }
+  }
+}
+```
+
+### How Claude uses QMD
+
+Once configured, add this to your `CLAUDE.md` so Claude knows when to use it:
+
+```markdown
+### Searching Documents
+
+Use **QMD** to search across journals, decisions, plans, and inbox:
+
+- `search` — keyword/BM25, fast, good for specific terms
+- `vsearch` — semantic/vector, good for "what have I said about X" or thematic queries
+- `query` — hybrid (BM25 + vector + reranking), best for important searches
+- `get` / `multi_get` — retrieve full document content by path
+
+Read files directly when you already know the exact path.
+```
+
+### Keep the index fresh
+
+QMD doesn't auto-update. Run `qmd update && qmd embed` periodically, or add it to the morning skill (Step 0) so it re-indexes before each session.
