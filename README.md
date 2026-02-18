@@ -42,7 +42,7 @@ mkdir -p ~/.claude/skills
 cp -r skills/morning ~/.claude/skills/morning
 ```
 
-Then **edit the skill files** — replace `YOURNAME` with your name in both `SKILL.md` and `reference.md`.
+The skill files reference `$LIFE_DIR` from your `CLAUDE.md` — no manual edits needed if you've set that up.
 
 ### 4. Install the journal script
 
@@ -54,7 +54,7 @@ cp scripts/journal.sh ~/.scripts/journal.sh
 chmod +x ~/.scripts/journal.sh
 ```
 
-Edit `~/.scripts/journal.sh` — update `JOURNAL_DIR`, `TEMPLATE`, and `EDITOR_CMD` at the top to match your paths and preferred editor.
+Edit `~/.scripts/journal.sh` — update `LIFE_DIR` and `EDITOR_CMD` at the top to match your paths and preferred editor.
 
 Then add the alias to your shell config (`~/.zshrc` or `~/.bashrc`):
 

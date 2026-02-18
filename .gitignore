@@ -1,1 +1,15 @@
 .DS_Store
+
+# Personal journal data (lives outside this repo, but just in case)
+journal/
+decisions/
+inbox.md
+plan.md
+reference/
+
+# Editor / OS
+*.swp
+*~
+.vscode/
+.idea/
+Thumbs.db

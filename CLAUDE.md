@@ -30,7 +30,7 @@ When working through the day, act as a thinking partner:
 **What to log:** Decisions, conclusions, work accomplished, key insights.
 **What to skip:** Exploratory back-and-forth (unless requested), trivial exchanges.
 
-Actions that come out of conversations go in `~/Documents/YOURNAME/inbox.md`, not embedded in journal entries.
+Actions that come out of conversations go in `$LIFE_DIR/inbox.md`, not embedded in journal entries.
 
 ---
 
@@ -38,17 +38,25 @@ Actions that come out of conversations go in `~/Documents/YOURNAME/inbox.md`, no
 
 Inspired by Carmack's .plan files and Franklin's systematic self-improvement.
 
+### Settings
+
+```
+LIFE_DIR = ~/Documents/hahagood
+```
+
+All paths below are relative to `$LIFE_DIR`. Change the value above to reconfigure everything.
+
 ### Locations
 
 ```
-~/Documents/YOURNAME/plan.md                        # 10-year life vision
-~/Documents/YOURNAME/journal/YYYY/goals.md          # Annual goals
-~/Documents/YOURNAME/journal/YYYY/MM/YYYY-MM-DD.md  # Daily entries
-~/Documents/YOURNAME/journal/YYYY/MM/week-WW.md     # Weekly reviews (optional)
-~/Documents/YOURNAME/reference/values.md            # Core principles
-~/Documents/YOURNAME/inbox.md                       # Quick capture
-~/Documents/YOURNAME/decisions/                     # Decision records
-~/Documents/YOURNAME/templates/                     # Templates
+$LIFE_DIR/plan.md                        # 10-year life vision
+$LIFE_DIR/journal/YYYY/goals.md          # Annual goals
+$LIFE_DIR/journal/YYYY/MM/YYYY-MM-DD.md  # Daily entries
+$LIFE_DIR/journal/YYYY/MM/week-WW.md     # Weekly reviews (optional)
+$LIFE_DIR/reference/values.md            # Core principles
+$LIFE_DIR/inbox.md                       # Quick capture
+$LIFE_DIR/decisions/                     # Decision records
+$LIFE_DIR/templates/                     # Templates
 ```
 
 ### Daily Journal Format

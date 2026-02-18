@@ -3,21 +3,21 @@
 ## File Locations
 
 ```
-~/Documents/YOURNAME/plan.md                        # 10-year life vision
-~/Documents/YOURNAME/journal/YYYY/goals.md          # Annual goals
-~/Documents/YOURNAME/journal/YYYY/MM/YYYY-MM-DD.md  # Daily entries
-~/Documents/YOURNAME/journal/YYYY/MM/week-WW.md     # Weekly reviews (optional)
-~/Documents/YOURNAME/reference/values.md            # Core principles
-~/Documents/YOURNAME/inbox.md                       # Quick capture
-~/Documents/YOURNAME/decisions/                     # Decision records
-~/Documents/YOURNAME/templates/                     # Templates
+$LIFE_DIR/plan.md                        # 10-year life vision
+$LIFE_DIR/journal/YYYY/goals.md          # Annual goals
+$LIFE_DIR/journal/YYYY/MM/YYYY-MM-DD.md  # Daily entries
+$LIFE_DIR/journal/YYYY/MM/week-WW.md     # Weekly reviews (optional)
+$LIFE_DIR/reference/values.md            # Core principles
+$LIFE_DIR/inbox.md                       # Quick capture
+$LIFE_DIR/decisions/                     # Decision records
+$LIFE_DIR/templates/                     # Templates
 ```
 
 ## Task Management (Plain Text)
 
 All tasks are managed in plain text:
 
-- **Personal backlog / quick capture:** `~/Documents/YOURNAME/inbox.md`
+- **Personal backlog / quick capture:** `$LIFE_DIR/inbox.md`
 - **Project tasks:** `plan.md` in each project's repo root
 - **Daily to-dos:** In the morning section of the daily journal
 

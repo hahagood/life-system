@@ -5,13 +5,14 @@
 # Backfills any missing days with calendar events and carried-over todos
 #
 # Setup:
-#   1. Edit JOURNAL_DIR and TEMPLATE below to match your paths
+#   1. Edit LIFE_DIR below to match your path (should match CLAUDE.md Settings)
 #   2. chmod +x this file
 #   3. Add to your shell: alias jrn='~/.scripts/journal.sh'
-#   4. (Optional) Install icalBuddy for calendar integration: brew install ical-buddy
+#   4. (Optional, macOS) Install icalBuddy for calendar integration: brew install ical-buddy
 
-JOURNAL_DIR="$HOME/Documents/YOURNAME/journal"
-TEMPLATE="$HOME/Documents/YOURNAME/templates/daily-journal.md"
+LIFE_DIR="$HOME/Documents/hahagood"
+JOURNAL_DIR="$LIFE_DIR/journal"
+TEMPLATE="$LIFE_DIR/templates/daily-journal.md"
 
 # Editor command — change to your preference (e.g., "cursor", "vim", "open -a Obsidian")
 EDITOR_CMD="code"
@@ -19,15 +20,61 @@ EDITOR_CMD="code"
 # Calendar names to include (only used if icalBuddy is installed)
 CALENDAR_NAMES="Work,Personal,Family"
 
+# --- Cross-platform date helpers ---
+
+# Detect platform once
+if [[ "$(uname)" == "Darwin" ]]; then
+    IS_MACOS=true
+else
+    IS_MACOS=false
+fi
+
+# date_offset_days N  — prints date N days ago as YYYY-MM-DD
+date_offset_days() {
+    local DAYS="$1"
+    if $IS_MACOS; then
+        date -v-${DAYS}d +%Y-%m-%d
+    else
+        date -d "$TODAY - ${DAYS} days" +%Y-%m-%d
+    fi
+}
+
+# date_part FORMAT DATE  — extract part of a date (e.g. %Y, %m)
+date_part() {
+    local FMT="$1"
+    local D="$2"
+    if $IS_MACOS; then
+        date -j -f "%Y-%m-%d" "$D" +"$FMT"
+    else
+        date -d "$D" +"$FMT"
+    fi
+}
+
+# days_between START END  — number of days from START to END
+days_between() {
+    local START_DATE="$1"
+    local END_DATE="$2"
+    if $IS_MACOS; then
+        local START_SEC=$(date -j -f "%Y-%m-%d" "$START_DATE" "+%s")
+        local END_SEC=$(date -j -f "%Y-%m-%d" "$END_DATE" "+%s")
+    else
+        local START_SEC=$(date -d "$START_DATE" "+%s")
+        local END_SEC=$(date -d "$END_DATE" "+%s")
+    fi
+    echo $(( (END_SEC - START_SEC) / 86400 ))
+}
+
+# --- End date helpers ---
+
 # Get today's date
 TODAY=$(date +%Y-%m-%d)
 
 # Find most recent journal entry (looking back up to 60 days)
 find_most_recent_journal_date() {
     for i in $(seq 1 60); do
-        PAST_DATE=$(date -v-${i}d +%Y-%m-%d)
-        PAST_YEAR=$(date -v-${i}d +%Y)
-        PAST_MONTH=$(date -v-${i}d +%m)
+        PAST_DATE=$(date_offset_days "$i")
+        PAST_YEAR=$(date_part "%Y" "$PAST_DATE")
+        PAST_MONTH=$(date_part "%m" "$PAST_DATE")
         PAST_FILE="$JOURNAL_DIR/$PAST_YEAR/$PAST_MONTH/$PAST_DATE.md"
         if [ -f "$PAST_FILE" ]; then
             echo "$PAST_DATE"
@@ -151,15 +198,6 @@ create_journal_entry() {
     echo "$TARGET_FILE"
 }
 
-# Calculate days between two dates (macOS)
-days_between() {
-    local START_DATE="$1"
-    local END_DATE="$2"
-    local START_SEC=$(date -j -f "%Y-%m-%d" "$START_DATE" "+%s")
-    local END_SEC=$(date -j -f "%Y-%m-%d" "$END_DATE" "+%s")
-    echo $(( (END_SEC - START_SEC) / 86400 ))
-}
-
 # Main logic
 MOST_RECENT_DATE=$(find_most_recent_journal_date)
 
@@ -167,13 +205,13 @@ if [ -n "$MOST_RECENT_DATE" ]; then
     DAYS_MISSING=$(days_between "$MOST_RECENT_DATE" "$TODAY")
 
     if [ "$DAYS_MISSING" -gt 0 ]; then
-        PREV_YEAR=$(echo "$MOST_RECENT_DATE" | cut -d'-' -f1)
-        PREV_MONTH=$(echo "$MOST_RECENT_DATE" | cut -d'-' -f2)
-        PREV_FILE="$JOURNAL_DIR/$PREV_YEAR/$PREV_MONTH/$MOST_RECENT_DATE.md"
+        MOST_RECENT_YEAR=$(date_part "%Y" "$MOST_RECENT_DATE")
+        MOST_RECENT_MONTH=$(date_part "%m" "$MOST_RECENT_DATE")
+        PREV_FILE="$JOURNAL_DIR/$MOST_RECENT_YEAR/$MOST_RECENT_MONTH/$MOST_RECENT_DATE.md"
 
         # Create entries for each missing day (starting from day after most recent)
         for i in $(seq $((DAYS_MISSING - 1)) -1 0); do
-            TARGET_DATE=$(date -v-${i}d +%Y-%m-%d)
+            TARGET_DATE=$(date_offset_days "$i")
             PREV_FILE=$(create_journal_entry "$TARGET_DATE" "$PREV_FILE")
         done
     fi
